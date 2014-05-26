@@ -13,7 +13,8 @@ logging.basicConfig(level=logging.DEBUG,
 dbfile = "employs.db"
 itemtbls="workitem"
 emptbl="employs"
-class sql(object):
+
+class Sql(object):
     def __init__(self):
         try:
             self.sql_con = sqlite3.connect(dbfile)
@@ -27,10 +28,7 @@ class sql(object):
     def createdb(self):
         # create workitem table
         cmd = "SELECT name from sqlite_master WHERE type='table' and name='{0}'".format(itemtbls)
-        logging.debug("cmd={0}".format(cmd))
-        self.cur.execute(cmd)
-        rows = self.cur.fetchall()
-        pdb.set_trace()
+        rows = self.runcmd(cmd)
         if(len(rows) == 0):
             cmd = """
                 CREATE TABLE `{0}` (
@@ -41,12 +39,11 @@ class sql(object):
                     `len`	REAL NOT NULL
                 );
             """.format(itemtbls)
-            self.cur.execute(cmd) 
-            self.sql_con.commit()
+            self.runcmd(cmd)
 
         # create employee table
-        cmd = "SELECT name from sqlite_master WHERE type='table' and name={0}".format(emptbl)
-        logging.debug("cmd={0}".format(cmd))
+        cmd = "SELECT name from sqlite_master WHERE type='table' and name='{0}'".format(emptbl)
+        rows = self.runcmd(cmd)
         if(len(rows) == 0):
             cmd = """
                 CREATE TABLE `{0}` (
@@ -56,8 +53,17 @@ class sql(object):
                     `money`	REAL NOT NULL
                 );
             """.format(emptbl)
-            self.cur.execute(cmd) 
-            self.sql_con.commit()
+            self.runcmd(cmd)
 
-if __name__ == '__main__':
-    obj = sql()
+    def runcmd(self, cmdstr):
+        logging.debug("run sql cmd: \n\t{0}".format(cmdstr))
+        #pdb.set_trace()
+        try:
+            self.cur.execute(cmdstr)
+            self.sql_con.commit()
+        except sqlite3.Error, e:
+            logging.error(" sql cmd:{0} error:{1}",cmdstr, e)
+            return [] 
+        return self.cur.fetchall()
+
+sqlobj = Sql()
