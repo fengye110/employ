@@ -19,7 +19,7 @@ class Sql(object):
         try:
             self.sql_con = sqlite3.connect(dbfile)
             self.cur = self.sql_con.cursor()
-        except sqlite3.Error,e:
+        except sqlite3.Error as e:
             print("sql connect error {0}"%(dbfile))
             return None
 
@@ -49,21 +49,26 @@ class Sql(object):
                 CREATE TABLE `{0}` (
                     `id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     `name`	TEXT NOT NULL,
-                    `month`	REAL NOT NULL,
+                    `month`	INTEGER NOT NULL,
                     `money`	REAL NOT NULL
                 );
             """.format(emptbl)
             self.runcmd(cmd)
 
     def runcmd(self, cmdstr):
-        logging.debug("run sql cmd: \n\t{0}".format(cmdstr))
+        logging.debug(cmdstr)
         #pdb.set_trace()
+        sql_con = None
         try:
             self.cur.execute(cmdstr)
             self.sql_con.commit()
-        except sqlite3.Error, e:
+        except sqlite3.Error as e:
             logging.error(" sql cmd:{0} error:{1}",cmdstr, e)
             return [] 
-        return self.cur.fetchall()
+
+        if(cmdstr.lower().find("select") != -1):
+            return self.cur.fetchall()
+        return []
+
 
 sqlobj = Sql()

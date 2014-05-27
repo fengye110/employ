@@ -13,8 +13,8 @@ class WorkItem(object):
             try:
                 sql_con = sqlite3.connect(dbfile)
                 cur = sql_con.cursor()
-            except sqlite3.Error,e:
+            except sqlite3.Error as e:
                 print("canot open sqlfile:"%(dbfile))
         t = (name,)
         for row in cur.execute("SELECT * from ? WHERE name=?", t):
-            print row
+            print(row)
