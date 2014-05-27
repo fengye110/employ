@@ -18,7 +18,7 @@ class Employ(object):
 
         # check if name in db
         cmd='SELECT id,name FROM {0}  WHERE name="{1}" LIMIT 1'.format(emptbl, self.name)
-        pdb.set_trace()
+        #pdb.set_trace()
         #cmd="SELECT id,name FROM {0}  WHERE name like '%{1}%' ".format(emptbl, name)
         ids=sqlobj.runcmd(cmd)
         if(len(ids) == 1):
@@ -32,9 +32,7 @@ class Employ(object):
             cmd='UPDATE {0} SET name="{1}", month={2}, money={3} WHERE id={4}'.format(emptbl,self.name, self.month, self.money, self.id)
             sqlobj.runcmd(cmd)
 
-    def set(self, name, month, money):
-        if(name != None):
-            self.name = name
+    def set(self,  month, money):
         if(month != None):
             self.month = month
         if(money != None):
@@ -56,7 +54,7 @@ class Employ(object):
         if(len(ids) != 1):
             logging.error("get id after insert faild\n")
             return -1
-        self.id = ids[0]
+        self.id = ids[0][0]
         return 0
 
 if __name__ == '__main__':
@@ -68,5 +66,5 @@ if __name__ == '__main__':
     ep.remove()
 
     ep = Employ("kk")
-    ep.set(None, 23,111)
+    ep.set(23,111)
     ep.update()

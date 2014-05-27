@@ -56,14 +56,14 @@ class Sql(object):
             self.runcmd(cmd)
 
     def runcmd(self, cmdstr):
-        logging.debug(cmdstr)
+        logging.debug(" "+cmdstr)
         #pdb.set_trace()
         sql_con = None
         try:
             self.cur.execute(cmdstr)
             self.sql_con.commit()
         except sqlite3.Error as e:
-            logging.error(" sql cmd:{0} error:{1}",cmdstr, e)
+            logging.error(" sql cmd:{0} error:{1}".format(cmdstr, e))
             return [] 
 
         if(cmdstr.lower().find("select") != -1):
