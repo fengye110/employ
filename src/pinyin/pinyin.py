@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-#coding=utf-8  
 
 """
     Author:cleverdeng
@@ -36,36 +35,20 @@ class PinYin(object):
                     self.word_dict[line[0]] = line[1]
 
 
-    def cvt(self, string=""):
+    def hanzi2pinyin(self, string=""):
         result = []
         #if not isinstance(string, unicode):
             #string = string.decode("utf-8")
         
-        alpha=""
         for char in string:
             key = '%X' % ord(char)
-            #pdb.set_trace()
-            if(char.isalnum()):
-                alpha +=char
-            elif(char.isspace()):
-                if(len(alpha)>0):
-                    result.append(alpha)
-                    alpha=""
-            else:
-                if(len(alpha)>0):
-                    result.append(alpha)
-                    alpha=""
-                result.append(self.word_dict.get(key, char).split()[0][:-1].lower())
-
-        if(len(alpha)>0):
-            result.append(alpha)
-            alpha=""
+            result.append(self.word_dict.get(key, char).split()[0][:-1].lower())
 
         return result
 
 
-    def cvt_split(self, string="", split=""):
-        result = self.cvt(string=string)
+    def hanzi2pinyin_split(self, string="", split=""):
+        result = self.hanzi2pinyin(string=string)
         if split == "":
             return result
         else:
@@ -78,5 +61,5 @@ if __name__ == "__main__":
     test.load_word()
     string = "钓鱼岛是中国的"
     print("in: %s" % string)
-    print("out: %s" % str(test.cvt(string=string)))
-    print("out: %s" % test.cvt_split(string=string, split="-"))
+    print("out: %s" % str(test.hanzi2pinyin(string=string)))
+    print("out: %s" % test.hanzi2pinyin_split(string=string, split="-"))
