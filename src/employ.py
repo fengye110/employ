@@ -7,14 +7,17 @@ from sql import emptbl
 import time
 import logging
 import pdb
+from pinyin.pinyin import piny
 
 class Employ(object):
     def __init__(self, name):
         self.name = name
-        self.money = 0
-        self.month = time.strftime("%m")
+        #self.money = 0
+        #self.month = time.strftime("%m")
         self.id = None
+        self.pinyin = None
         self.workitems=[]
+        self.pinyin = piny.hanzi2pinyin(self.name)
 
         # check if name in db
         cmd='SELECT id,name FROM {0}  WHERE name="{1}" LIMIT 1'.format(emptbl, self.name)
@@ -29,15 +32,8 @@ class Employ(object):
             self._add()
         else:
             # update all value to  sql
-            cmd='UPDATE {0} SET name="{1}", month={2}, money={3} WHERE id={4}'.format(emptbl,self.name, self.month, self.money, self.id)
+            cmd='UPDATE {0} SET name="{1}", WHERE id={2}'.format(emptbl,self.name, self.id)
             sqlobj.runcmd(cmd)
-
-    def set(self,  month, money):
-        if(month != None):
-            self.month = month
-        if(money != None):
-            self.money = money
-        #self.update()
 
     def remove(self):
         if(self.id != None):
@@ -46,7 +42,7 @@ class Employ(object):
 
     def _add(self):
         # insert to table
-        cmd = 'INSERT INTO {0} (id,name,month,money) VALUES (NULL,"{1}",{2},{3})'.format(emptbl,self.name, self.month, self.money)
+        cmd = 'INSERT INTO {0} (id,name) VALUES (NULL,"{1}")'.format(emptbl,self.name)
         sqlobj.runcmd(cmd)
         # get id
         cmd ='SELECT id FROM {0} ORDER BY id DESC LIMIT  1'.format(emptbl)
@@ -59,12 +55,11 @@ class Employ(object):
 
 if __name__ == '__main__':
     ep = Employ("ni")
-    ep.money = 20
     ep.update()
     #ep.money = 1
     #ep.update()
     ep.remove()
 
-    ep = Employ("kk")
-    ep.set(23,111)
+    ep = Employ("kk0")
     ep.update()
+    ep.remove()

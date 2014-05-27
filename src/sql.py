@@ -49,8 +49,6 @@ class Sql(object):
                 CREATE TABLE `{0}` (
                     `id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     `name`	TEXT NOT NULL,
-                    `month`	INTEGER NOT NULL,
-                    `money`	REAL NOT NULL
                 );
             """.format(emptbl)
             self.runcmd(cmd)
