@@ -49,12 +49,13 @@ class Sql(object):
                 CREATE TABLE `{0}` (
                     `id`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                     `name`	TEXT NOT NULL,
+                    `codeid` INTEGER NOT NULL
                 );
             """.format(emptbl)
             self.runcmd(cmd)
 
     def runcmd(self, cmdstr):
-        logging.debug(" "+cmdstr)
+        logging.debug(" \n\t"+cmdstr)
         #pdb.set_trace()
         sql_con = None
         try:

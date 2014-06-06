@@ -18,6 +18,7 @@ class Employ(object):
         self.pinyin = None
         self.workitems=[]
         self.pinyin = piny.hanzi2pinyin(self.name)
+        self.codeid = -1;
 
         # check if name in db
         cmd='SELECT id,name FROM {0}  WHERE name="{1}" LIMIT 1'.format(emptbl, self.name)
@@ -25,7 +26,10 @@ class Employ(object):
         #cmd="SELECT id,name FROM {0}  WHERE name like '%{1}%' ".format(emptbl, name)
         ids=sqlobj.runcmd(cmd)
         if(len(ids) == 1):
+            logging.debug(" has employ:{0}".format(self.name))
             self.id = ids[0][0]
+        else:
+            logging.debug(" has no employ:{0}".format(self.name))
 
     def update(self):
         if(self.id == None):
@@ -42,7 +46,7 @@ class Employ(object):
 
     def _add(self):
         # insert to table
-        cmd = 'INSERT INTO {0} (id,name) VALUES (NULL,"{1}")'.format(emptbl,self.name)
+        cmd = 'INSERT INTO {0} (id,name,codeid) VALUES (NULL,"{1}",{2})'.format(emptbl,self.name, self.codeid)
         sqlobj.runcmd(cmd)
         # get id
         cmd ='SELECT id FROM {0} ORDER BY id DESC LIMIT  1'.format(emptbl)
